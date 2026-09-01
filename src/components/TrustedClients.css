@@ -1,0 +1,321 @@
+/* ================================================================== */
+/* TRUSTED BY INDUSTRY LEADERS SECTION (2-ROW CONTINUOUS SLIDER)      */
+/* ================================================================== */
+
+/* ── Keyframes ─────────────────────────────────────────────────────── */
+@keyframes tcFadeUp {
+  0%   { opacity: 0; transform: translateY(36px); filter: blur(5px); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+}
+
+@keyframes tcRowIn {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.97); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0);   }
+}
+
+/* ── Section wrapper ───────────────────────────────────────────────── */
+.trusted-clients-section {
+  padding: 50px 0 110px 0;
+  background: linear-gradient(180deg, #F1F4F8 0%, #F7F9FC 55%, #F1F4F8 100%);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(8, 14, 28, 0.07);
+  /* hidden before scroll reveal */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trusted-clients-section.tc-section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Title reveal inside section ───────────────────────────────────── */
+.tc-section-visible .trusted-clients-title {
+  animation: tcFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* ── Marquee wrapper: hidden until in view ─────────────────────────── */
+.trusted-marquee-wrapper {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s,
+              transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.trusted-marquee-wrapper.tc-marquee-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Row reveal wrappers (reveal animation lives here, NOT on the track) ── */
+.track-row-reveal {
+  /* NO overflow:hidden here — it clips the card hover lift */
+  overflow: visible;
+  opacity: 0;
+  transform: translateY(24px);
+  filter: blur(4px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 14px 0;
+}
+
+.track-row-reveal.row-1.row-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: 0.2s;
+}
+
+.track-row-reveal.row-2.row-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: 0.38s;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* SECTION HEADER STYLES                                              */
+/* ------------------------------------------------------------------ */
+.trusted-clients-header {
+  max-width: 680px;
+  margin: 0 auto 48px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.trusted-clients-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(230, 58, 39, 0.08);
+  border: 1.5px solid rgba(230, 58, 39, 0.28);
+  padding: 6px 18px;
+  border-radius: 30px;
+  margin-bottom: 16px;
+  color: var(--theme-color, #E63A27);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+}
+
+.trusted-clients-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #0F172A;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.trusted-clients-title span {
+  color: var(--theme-color, #E63A27);
+}
+
+/* Title Line Divider */
+.trusted-title-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 14px;
+}
+
+.trusted-title-divider .divider-line {
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--theme-color, #E63A27), transparent);
+}
+
+.trusted-title-divider .divider-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--theme-color, #E63A27);
+  box-shadow: 0 0 8px rgba(230, 58, 39, 0.6);
+}
+
+.trusted-clients-subtitle {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #64748b;
+  margin-bottom: 0;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+}
+
+/* ── Slider wrapper layout ── */
+.trusted-marquee-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* padding gives vertical breathing room so hovering cards aren't clipped */
+  padding: 4px 0 4px 0;
+}
+
+
+.trusted-slider-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.trusted-slider-fade.left {
+  left: 0;
+  background: linear-gradient(90deg, #F8F9FB 0%, rgba(248, 249, 251, 0) 100%);
+}
+
+.trusted-slider-fade.right {
+  right: 0;
+  background: linear-gradient(270deg, #F8F9FB 0%, rgba(248, 249, 251, 0) 100%);
+}
+
+/* ------------------------------------------------------------------ */
+/* MARQUEE TRACKS & ANIMATIONS                                        */
+/* ------------------------------------------------------------------ */
+.trusted-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  will-change: transform;
+}
+
+.track-left {
+  animation: marqueeLeft 45s linear infinite;
+}
+
+.track-right {
+  animation: marqueeRight 45s linear infinite;
+}
+
+.trusted-marquee-wrapper:hover .trusted-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* SLIDER LOGO CARD STYLING                                           */
+/* ------------------------------------------------------------------ */
+.trusted-slider-card {
+  flex: 0 0 auto;
+  width: 195px;
+  height: 96px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid rgba(8, 14, 28, 0.08);
+  box-shadow: 0 4px 18px rgba(8, 14, 28, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              background 0.3s ease;
+  cursor: pointer;
+}
+
+.trusted-slider-card img {
+  max-width: 100%;
+  max-height: 65px;
+  object-fit: contain;
+  filter: none;
+  opacity: 1;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease;
+}
+
+/* Hover Effects */
+.trusted-slider-card:hover {
+  transform: translateY(-9px) scale(1.05);
+  background: #fff8f7;
+  border-color: rgba(230, 58, 39, 0.55);
+  box-shadow: 0 24px 52px -10px rgba(230, 58, 39, 0.26),
+              0 8px 24px rgba(8, 14, 28, 0.08),
+              0 0 0 4px rgba(230, 58, 39, 0.09);
+}
+
+.trusted-slider-card:hover img {
+  transform: scale(1.1);
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* ------------------------------------------------------------------ */
+/* RESPONSIVE LAYOUT STYLES                                           */
+/* ------------------------------------------------------------------ */
+@media (max-width: 991px) {
+  .trusted-clients-section {
+    padding: 70px 0 80px 0;
+  }
+  .trusted-clients-title {
+    font-size: 30px;
+  }
+  .trusted-slider-card {
+    width: 175px;
+    height: 88px;
+    padding: 12px 18px;
+  }
+  .trusted-slider-card img {
+    max-height: 48px;
+  }
+  .trusted-slider-fade {
+    width: 90px;
+  }
+}
+
+@media (max-width: 575px) {
+  .trusted-clients-title {
+    font-size: 24px;
+  }
+  .trusted-marquee-track {
+    gap: 40px !important;
+  }
+  .trusted-slider-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+  }
+  .trusted-slider-card img {
+    max-height: 44px !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}

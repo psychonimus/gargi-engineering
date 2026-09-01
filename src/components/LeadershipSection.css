@@ -1,0 +1,322 @@
+/* ==========================================================================
+   Leadership Section (Full Width Design)
+   ========================================================================== */
+
+.lead-section {
+  position: relative;
+  width: 100%;
+  padding: 60px 0 45px;
+  background: url("../assets/img/testi_bg_1.png") center/cover no-repeat;
+  overflow: hidden;
+  scroll-margin-top: 150px;
+}
+
+/* Background Image Overlay (Full Width) */
+.lead-steel-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.lead-overlay-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 50%, rgba(6, 17, 33, 0.4) 0%, #061121 90%);
+  pointer-events: none;
+}
+
+/* --- CONTAINER --- */
+.lead-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.lead-card-box {
+  position: relative;
+}
+
+/* --- CONTENT GRID --- */
+.lead-content-grid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 35px;
+  gap: 40px;
+}
+
+/* Left Text Column */
+.lead-text-side {
+  max-width: 560px;
+  padding-bottom: 90px;
+}
+
+.lead-text-side .eng-tag {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.lead-main-heading {
+  font-size: 42px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  margin: 0 0 20px;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+  letter-spacing: -0.5px;
+}
+
+.lead-main-heading .text-orange {
+  color: #E55206;
+}
+
+.lead-middle-accent {
+  width: 50px;
+  height: 3px;
+  background-color: #E55206;
+  margin-bottom: 20px;
+}
+
+.lead-desc-para {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ffffff;
+  margin: 0 0 14px;
+  margin-top: 10px;
+}
+
+.lead-desc-para:last-child {
+  margin-bottom: 0;
+   margin-top: 30px;
+}
+
+/* Right Person Cutout Column */
+.lead-person-side {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin-right: 60px;
+  transform: translateX(-15px);
+}
+
+.lead-person-img {
+  max-height: 460px;
+  width: 100%;
+  max-width: 440px;
+  display: block;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* --- BOTTOM FLOATING WHITE STRIP --- */
+.lead-white-strip {
+  position: relative;
+  z-index: 3;
+  background: #ffffff;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lead-strip-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-right: 1px solid #e2e8f0;
+  padding: 10px 16px;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+  border-radius: 12px;
+}
+
+.lead-strip-item:last-child {
+  border-right: none;
+}
+
+.lead-strip-item:hover {
+  transform: translateY(-4px);
+  background: rgba(229, 82, 6, 0.03);
+}
+
+.lead-strip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lead-strip-item:hover .lead-strip-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.lead-strip-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.lead-strip-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+  white-space: nowrap;
+}
+
+/* --- ENTRANCE ANIMATIONS (Slow Motion) --- */
+@keyframes leadFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes leadFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.lead-text-side,
+.lead-person-img,
+.lead-white-strip {
+  opacity: 0;
+}
+
+.lead-section.is-visible .lead-text-side {
+  animation: leadFadeUp 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.1s;
+}
+
+.lead-section.is-visible .lead-person-img {
+  animation: leadFadeRight 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.3s;
+}
+
+.lead-section.is-visible .lead-white-strip {
+  animation: leadFadeUp 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.6s;
+}
+
+/* --- RESPONSIVE STYLES --- */
+@media (max-width: 1200px) {
+  .lead-main-heading {
+    font-size: 36px;
+  }
+  .lead-person-img {
+    max-height: 400px;
+  }
+  .lead-strip-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 992px) {
+  .lead-content-grid {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .lead-text-side {
+    max-width: 100%;
+    padding-bottom: 0;
+  }
+  .lead-top-accent,
+  .lead-middle-accent {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .lead-person-side {
+    margin-right: 0;
+    transform: none;
+    justify-content: center;
+  }
+  .lead-white-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 16px;
+    padding: 20px 16px;
+  }
+  .lead-strip-item {
+    width: 100%;
+    border-right: none !important;
+    border-bottom: none !important;
+    padding: 8px 10px;
+    justify-content: center;
+    gap: 10px;
+  }
+  .lead-strip-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .lead-strip-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .lead-strip-title {
+    font-size: 13.5px;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 768px) {
+  .lead-container {
+    padding: 0 20px;
+  }
+  .lead-section {
+    padding: 60px 0 40px;
+  }
+  .lead-main-heading {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lead-main-heading {
+    font-size: 26px;
+  }
+  .lead-body-text {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .lead-person-img {
+    max-height: 300px;
+  }
+  .lead-white-strip {
+    padding: 20px;
+  }
+}

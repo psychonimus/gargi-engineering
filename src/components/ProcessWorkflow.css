@@ -1,0 +1,297 @@
+.workflow-section {
+  padding: 60px 0;
+  background-color: #ffffff;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  overflow: hidden;
+}
+
+.workflow-title {
+  font-size: 38px;
+  font-weight: 800;
+  margin-bottom: 80px; /* Increased to provide proper space before timeline */
+  font-family: 'Manrope', sans-serif;
+  color: #000000;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+.workflow-title span {
+  color: #E55206; /* Matches the theme orange */
+}
+
+/* Decorative divider */
+.workflow-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+}
+.workflow-divider-line {
+  width: 20px;
+  height: 2px;
+  background-color: #E55206;
+}
+.workflow-divider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #E55206;
+  margin: 0 10px;
+}
+
+.workflow-timeline-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.workflow-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  gap: 10px;
+}
+
+/* Horizontal dotted line through the center of the circles */
+.workflow-timeline::before {
+  content: '';
+  position: absolute;
+  top: 37.5px; /* Exactly center of the 75px circles */
+  left: 37.5px; /* Start at the center of the first circle */
+  width: calc(100% - 75px); /* End at the center of the last circle */
+  border-top: 2px dotted #E55206;
+  z-index: 0;
+}
+.workflow-item {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: opacity, transform;
+}
+
+/* Entry Animation Trigger */
+.animate-in .workflow-item {
+  animation: workflowFadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes workflowFadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.workflow-icon-wrapper {
+  width: 75px;
+  height: 75px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 45px; /* Space for the vertical line */
+  z-index: 2;
+}
+
+/* Modern Dual-Orbit Animation */
+.workflow-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(229, 82, 6, 0.1);
+  border-top-color: #E55206;
+  animation: spinSlow 20s linear infinite;
+  pointer-events: none;
+}
+
+.workflow-icon-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  border-radius: 50%;
+  border: 1px dashed rgba(229, 82, 6, 0.5);
+  animation: spinSlowReverse 30s linear infinite;
+  pointer-events: none;
+}
+
+/* Pause animations on hover for a focus effect */
+.workflow-item:hover .workflow-icon-wrapper::before,
+.workflow-item:hover .workflow-icon-wrapper::after {
+  animation-play-state: paused;
+}
+
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spinSlowReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.workflow-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.workflow-img-icon {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+/* Vertical connector line dropping to number */
+.workflow-connector {
+  position: absolute;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 45px; /* Exactly spans the 45px margin-bottom */
+  border-left: 2px dotted #E55206;
+  z-index: 2; /* increased z-index to show dot above lines */
+}
+
+/* Solid orange dot at the beginning of the connector */
+.workflow-connector::before {
+  content: '';
+  position: absolute;
+  top: -4px; /* Centers the 8px dot on the top edge */
+  left: -1px; /* Center of the 2px left-border */
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #E55206;
+  border-radius: 50%;
+}
+
+.workflow-number {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 2px solid #E55206;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #E55206;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  z-index: 2;
+  position: relative;
+}
+
+.workflow-step-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.3;
+  min-height: 42px;
+}
+
+.workflow-step-desc {
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.6;
+  padding: 0 5px;
+}
+
+@media (max-width: 1199px) {
+  .workflow-icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+  .workflow-icon-wrapper::after {
+    top: -8px;
+    bottom: -8px;
+    left: -8px;
+    right: -8px;
+  }
+  .workflow-icon {
+    font-size: 24px;
+  }
+  .workflow-connector {
+    top: 60px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 991px) {
+  .workflow-section {
+    padding: 45px 0;
+  }
+  .workflow-title {
+    margin-bottom: 45px;
+    font-size: 30px;
+  }
+  .workflow-timeline::before {
+    display: none; /* Hide horizontal line since cards wrap */
+  }
+  .workflow-timeline {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+  .workflow-item {
+    width: 45%;
+  }
+}
+
+@media (max-width: 767px) {
+  .workflow-title {
+    margin-bottom: 35px;
+    font-size: 26px;
+  }
+  .workflow-timeline {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  .workflow-item {
+    width: 100%;
+    max-width: 300px;
+  }
+  .workflow-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 30px;
+  }
+  .workflow-icon-wrapper::after {
+    top: -8px;
+    bottom: -8px;
+    left: -8px;
+    right: -8px;
+  }
+  .workflow-icon {
+    font-size: 24px;
+  }
+  .workflow-connector {
+    top: 60px;
+    height: 30px;
+  }
+}

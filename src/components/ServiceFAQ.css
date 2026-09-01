@@ -1,0 +1,221 @@
+.service-faq-section {
+  position: relative;
+  background-color: #000000;
+  padding: 60px 0;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  overflow: hidden;
+  border-top: 2px solid #ffffff; /* There's a white line at the top in the image */
+}
+
+.service-faq-section::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: url('../assets/img/bg-1.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.05; /* Low opacity for a subtle look */
+  z-index: 0;
+  animation: panRight 30s ease-in-out infinite alternate;
+}
+
+@keyframes panRight {
+  0% {
+    transform: translateX(-3%);
+  }
+  100% {
+    transform: translateX(3%);
+  }
+}
+
+.service-faq-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+
+.service-faq-left {
+  padding-right: 40px;
+  position: relative;
+}
+
+.service-faq-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.4;
+  margin-bottom: 25px;
+}
+
+.service-faq-line {
+  width: 50px;
+  height: 2px;
+  background-color: #E55206;
+  margin-bottom: 30px;
+}
+
+.service-faq-subtitle {
+  font-size: 22px;
+  color: #ffffff;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.service-faq-image-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+  opacity: 0.6;
+}
+
+.service-faq-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
+/* Timeline */
+.faq-timeline-wrapper {
+  position: relative;
+  padding-left: 20px;
+}
+
+/* The vertical connecting line */
+.faq-timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 39px;
+  bottom: 0;
+  width: 1px;
+  background-color: #E55206;
+  z-index: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  will-change: transform;
+}
+
+.faq-timeline-item {
+  display: flex;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 40px;
+}
+
+.faq-timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.faq-timeline-node {
+  position: relative;
+  z-index: 2;
+  margin-right: 30px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.faq-timeline-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #E55206;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.faq-timeline-content {
+  flex: 1;
+  padding-bottom: 30px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.faq-timeline-item:last-child .faq-timeline-content {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.faq-question {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #E55206;
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+
+.faq-answer {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .service-faq-left {
+    padding-right: 15px;
+    margin-bottom: 50px;
+  }
+}
+
+/* --- Entry Animations --- */
+
+/* Initial Hidden States */
+.service-faq-left,
+.faq-timeline-item {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+/* Triggered Animation */
+.animate-in .service-faq-left {
+  animation: fadeUpModern 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.animate-in .faq-timeline-wrapper::before {
+  animation: drawLine 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: 0.2s; /* start line shortly after title */
+}
+
+.animate-in .faq-timeline-item {
+  animation: fadeUpModern 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Staggered delays for a dynamic feel - slower progression */
+.animate-in .faq-timeline-item:nth-child(1) { animation-delay: 0.5s; }
+.animate-in .faq-timeline-item:nth-child(2) { animation-delay: 1.0s; }
+.animate-in .faq-timeline-item:nth-child(3) { animation-delay: 1.5s; }
+.animate-in .faq-timeline-item:nth-child(4) { animation-delay: 2.0s; }
+
+@keyframes fadeUpModern {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawLine {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

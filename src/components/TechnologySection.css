@@ -1,0 +1,317 @@
+/* ==========================================================================
+   Technology Driven Workflows — Symmetrical Modern Aesthetic
+   ========================================================================== */
+
+.tech-section {
+  width: 100%;
+  background: #ffffff;
+  padding: 60px 6% 70px;
+  font-family: var(--body-font, 'Roboto', sans-serif);
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 150px;
+}
+
+.tech-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* ── HEADER STYLE ── */
+.tech-modern-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.tech-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.tech-tag-line {
+  width: 30px;
+  height: 2px;
+  background: var(--theme-color, #E63A27);
+}
+
+.eng-tag {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--theme-color, #E63A27);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+}
+
+.tech-modern-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 18px;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+  margin-top: -20px;
+}
+
+.tech-modern-title .highlight-text {
+  color: var(--theme-color, #E63A27);
+}
+
+.tech-modern-subtitle {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748b;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ── DYNAMIC SPLIT INTERACTIVE ROW ── */
+.tech-interactive-grid {
+  display: grid;
+  grid-template-columns: 29% 42% 29%;
+  gap: 24px;
+  align-items: center;
+}
+
+.tech-cards-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Row-based list cards */
+.tech-row-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.tech-row-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(230, 58, 39, 0.25);
+  box-shadow: 0 10px 24px rgba(230, 58, 39, 0.08);
+}
+
+.tech-row-card.active {
+  border-color: var(--theme-color, #E63A27);
+  background: #fff8f7;
+  box-shadow: 0 8px 25px rgba(230, 58, 39, 0.14);
+  transform: translateY(-3px);
+}
+
+.tech-row-card.active .tech-card-icon-wrap {
+  background: var(--theme-color, #E63A27);
+}
+
+.tech-row-card.active .tech-card-icon-wrap svg {
+  stroke: #ffffff;
+}
+
+.tech-row-card.active .tech-card-title {
+  color: var(--theme-color, #E63A27);
+}
+
+.tech-card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #fff3f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.tech-row-card:hover .tech-card-icon-wrap {
+  background: var(--theme-color, #E63A27);
+}
+
+.tech-row-card:hover .tech-card-icon-wrap svg {
+  stroke: #ffffff;
+}
+
+.tech-card-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+  transition: stroke 0.3s ease;
+}
+
+.tech-card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tech-card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 6px 0;
+  font-family: var(--title-font, 'Manrope', sans-serif);
+}
+
+.tech-card-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+  margin: 0;
+  text-align: left;
+}
+
+/* Center Graphic Element - Rounded Rectangle Dashboard Card Design */
+.tech-center-interactive-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.tech-model-showcase-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 480px;
+  margin: 0 auto;
+}
+
+.tech-model-showcase {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(8, 14, 28, 0.08);
+  border: 1px solid rgba(8, 14, 28, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  margin-top: 10px;
+}
+
+.tech-model-showcase:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(8, 14, 28, 0.12), 0 0 0 1.5px var(--theme-color, #E63A27);
+}
+
+.tech-showcase-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center;
+  border-radius: 20px;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tech-model-showcase:hover .tech-showcase-image {
+  transform: scale(1.05);
+}
+
+@keyframes imgFadeIn {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.img-fade-in {
+  animation: imgFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes techRotateOrbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Floating Badge Pill Under Circle */
+.tech-circular-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(230, 58, 39, 0.2);
+  color: #1e293b;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  margin-top: 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  font-family: var(--title-font, 'Manrope', sans-serif);
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--theme-color, #E63A27);
+  box-shadow: 0 0 0 3px rgba(230, 58, 39, 0.25);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .tech-interactive-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .tech-model-showcase-wrap {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  .tech-section {
+    padding: 50px 5% 60px;
+  }
+
+  .tech-modern-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-modern-title {
+    font-size: 24px;
+  }
+  .tech-modern-subtitle {
+    font-size: 14px;
+  }
+  .tech-model-showcase-wrap {
+    width: 100%;
+    height: 260px;
+  }
+  .tech-card {
+    padding: 16px;
+  }
+  .tech-card-title {
+    font-size: 13.5px;
+  }
+}
