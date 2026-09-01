@@ -48,7 +48,6 @@ transporter.verify((error, success) => {
   }
 });
 
-// Health check endpoint
 app.get("/api/health", (req, res) => {
   res
     .status(200)
@@ -58,9 +57,6 @@ app.get("/api/health", (req, res) => {
     });
 });
 
-// ════════════════════════════════════════════════════════════════
-// 1. ROUTE: CONSULTATION MODAL SUBMISSION (/api/consultation)
-// ════════════════════════════════════════════════════════════════
 app.post("/api/consultation", async (req, res) => {
   try {
     const {
@@ -81,7 +77,6 @@ app.post("/api/consultation", async (req, res) => {
       });
     }
 
-    // Plain text alternative (critical for passing spam filters)
     const plainText = `
 GARGI ENGINEERING SERVICES - TECHNICAL CONSULTATION REQUEST
 ------------------------------------------------------------
