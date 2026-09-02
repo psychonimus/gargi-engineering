@@ -160,7 +160,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
         role="dialog"
         aria-modal="true"
       >
-        {/* Header Section */}
         <div className="consult-modal-header">
           <div className="consult-modal-header-badge">
             <LuSparkles className="consult-badge-icon" />
@@ -180,7 +179,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
           </p>
         </div>
 
-        {/* Form Body or Success State */}
         <div className="consult-modal-body">
           {isSubmitted && submittedInfo ? (
             <div className="consult-success-view">
@@ -222,7 +220,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
           ) : (
             <form onSubmit={handleSubmit} className="consult-form" noValidate>
               <div className="consult-form-grid">
-                {/* Full Name */}
                 <div className="consult-field-group">
                   <label className="consult-label">
                     Full Name <span className="req">*</span>
@@ -239,8 +236,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
                   </div>
                   {errors.fullName && <span className="consult-err-text">{errors.fullName}</span>}
                 </div>
-
-                {/* Business Email */}
                 <div className="consult-field-group">
                   <label className="consult-label">
                     Business Email <span className="req">*</span>
@@ -257,8 +252,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
                   </div>
                   {errors.email && <span className="consult-err-text">{errors.email}</span>}
                 </div>
-
-                {/* Phone Number */}
                 <div className="consult-field-group">
                   <label className="consult-label">
                     Phone / WhatsApp Number <span className="req">*</span>
@@ -275,8 +268,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
                   </div>
                   {errors.phone && <span className="consult-err-text">{errors.phone}</span>}
                 </div>
-
-                {/* Company Name */}
                 <div className="consult-field-group">
                   <label className="consult-label">
                     Company / Organization <span className="req">*</span>
@@ -293,8 +284,6 @@ export default function ConsultationModal({ isOpen, onClose }) {
                   </div>
                   {errors.company && <span className="consult-err-text">{errors.company}</span>}
                 </div>
-
-                {/* Primary Service Needed */}
                 <div className="consult-field-group">
                   <label className="consult-label">Engineering Service Needed</label>
                   <div className="consult-input-wrap">

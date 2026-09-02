@@ -22,21 +22,32 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// SMTP Configuration using Gmail Service with timeout protection
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.SMTP_USER || "pgdiginitin78@gmail.com",
-    pass: (
-      process.env.SMTP_APP_PASSWORD ||
-      process.env.SMTP_PASS ||
-      ""
-    ).replace(/\s+/g, ""),
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+// Helper to create transporter on demand with environment validation
+const getTransporter = () => {
+  const user = process.env.SMTP_USER || "pgdiginitin78@gmail.com";
+  const pass = (
+    process.env.SMTP_APP_PASSWORD ||
+    process.env.SMTP_PASS ||
+    ""
+  ).replace(/\s+/g, "");
+
+  if (!user || !pass) {
+    throw new Error(
+      "SMTP credentials not configured. Please add SMTP_USER and SMTP_APP_PASSWORD in your Vercel Dashboard under Settings -> Environment Variables."
+    );
+  }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user,
+      pass,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+  });
+};
 
 // Destination email to receive all website inquiries
 const getReceiverEmail = () => {
@@ -47,17 +58,22 @@ const getReceiverEmail = () => {
   );
 };
 
-// Verify SMTP connection on local startup
+// Verify SMTP connection on local startup if password is provided
 if (!process.env.VERCEL) {
-  transporter.verify((error) => {
-    if (error) {
-      console.error("❌ SMTP Connection Error:", error.message);
-    } else {
-      console.log(
-        "✅ SMTP Transporter connected successfully and ready to send emails.",
-      );
-    }
-  });
+  try {
+    const transporter = getTransporter();
+    transporter.verify((error) => {
+      if (error) {
+        console.error("❌ SMTP Connection Error:", error.message);
+      } else {
+        console.log(
+          "✅ SMTP Transporter connected successfully and ready to send emails.",
+        );
+      }
+    });
+  } catch (err) {
+    console.warn("⚠️ SMTP Transporter warning:", err.message);
+  }
 }
 
 app.get(["/api/health", "/health", "/api", "/"], (req, res) => {
@@ -196,6 +212,7 @@ Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocal
     };
 
     // Send email via SMTP
+    const transporter = getTransporter();
     const info = await transporter.sendMail(mailOptions);
     console.log(
       `✅ Consultation email for "${fullName}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
@@ -330,6 +347,7 @@ Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLoc
     };
 
     // Send email via SMTP
+    const transporter = getTransporter();
     const info = await transporter.sendMail(mailOptions);
     console.log(
       `✅ Contact inquiry for "${name}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
@@ -420,6 +438,7 @@ Downloaded via Gargi Engineering Portal on ${new Date().toLocaleString()}
       `,
     };
 
+    const transporter = getTransporter();
     const info = await transporter.sendMail(mailOptions);
     console.log(
       `✅ Brochure lead for "${fullName}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
