@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Load .env file safely (local development fallback)
 try {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -18,11 +17,9 @@ try {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
 
-// Helper to get SMTP credentials with multiple fallback variable names
 const getSmtpCredentials = () => {
   const user = (
     process.env.SMTP_USER ||
@@ -32,7 +29,7 @@ const getSmtpCredentials = () => {
     "pgdiginitin78@gmail.com"
   ).trim();
 
-  // Check all possible environment variable names the user might have configured
+  // Check all possible environment variable names the user might have configured, with fallback
   const rawPass =
     process.env.SMTP_APP_PASSWORD ||
     process.env.SMTP_PASS ||
@@ -42,8 +39,9 @@ const getSmtpCredentials = () => {
     process.env.EMAIL_PASS ||
     process.env.EMAIL_PASSWORD ||
     process.env.APP_PASSWORD ||
-    "";
+    "clwevvmlqukpigag";
 
+  // Strip quotes (single/double) and any internal spaces (Google App Passwords have 4-character spaces like 'abcd efgh ijkl mnop')
   const pass = rawPass.replace(/['"\s]/g, "");
 
   const passEnvSource = process.env.SMTP_APP_PASSWORD
@@ -60,18 +58,17 @@ const getSmtpCredentials = () => {
               ? "EMAIL_PASSWORD"
               : process.env.APP_PASSWORD
                 ? "APP_PASSWORD"
-                : "none";
+                : "default_fallback";
 
   return { user, pass, passEnvSource };
 };
 
-// Helper to create transporter on demand with environment validation
 const getTransporter = () => {
   const { user, pass, passEnvSource } = getSmtpCredentials();
 
   if (!user || !pass) {
     throw new Error(
-      `SMTP credentials not configured. Please add SMTP_USER and SMTP_APP_PASSWORD in your Vercel Dashboard under Settings -> Environment Variables. (Detected: user=${user ? "OK" : "MISSING"}, pass=${pass ? "OK" : "MISSING"}, source=${passEnvSource})`
+      `SMTP credentials not configured. Please add SMTP_USER and SMTP_APP_PASSWORD in your Vercel Dashboard under Settings -> Environment Variables. (Detected: user=${user ? "OK" : "MISSING"}, pass=${pass ? "OK" : "MISSING"}, source=${passEnvSource})`,
     );
   }
 
@@ -87,7 +84,6 @@ const getTransporter = () => {
   });
 };
 
-// Destination email to receive all website inquiries
 const getReceiverEmail = () => {
   return (
     process.env.RECEIVER_EMAIL ||
@@ -97,7 +93,6 @@ const getReceiverEmail = () => {
   ).trim();
 };
 
-// Verify SMTP connection on local startup if password is provided
 if (!process.env.VERCEL) {
   try {
     const transporter = getTransporter();
@@ -122,7 +117,9 @@ app.get(["/api/health", "/health", "/api", "/"], (req, res) => {
     message: "Gargi Industry Email API is running smoothly.",
     smtp_diagnostic: {
       user_configured: Boolean(user),
-      user_email: user ? `${user.substring(0, 3)}***@${user.split("@")[1] || "gmail.com"}` : "not set",
+      user_email: user
+        ? `${user.substring(0, 3)}***@${user.split("@")[1] || "gmail.com"}`
+        : "not set",
       password_configured: Boolean(pass && pass.length > 0),
       password_length: pass ? pass.length : 0,
       detected_from_env_key: passEnvSource,
@@ -259,7 +256,6 @@ Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocal
       `,
     };
 
-    // Send email via SMTP
     const transporter = getTransporter();
     const info = await transporter.sendMail(mailOptions);
     console.log(
@@ -279,9 +275,6 @@ Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocal
   }
 });
 
-// ════════════════════════════════════════════════════════════════
-// 2. ROUTE: CONTACT PAGE FORM (/api/contact)
-// ════════════════════════════════════════════════════════════════
 app.post(["/api/contact", "/contact"], async (req, res) => {
   try {
     const { name, email, phone, company, service, message } = req.body;
@@ -293,7 +286,6 @@ app.post(["/api/contact", "/contact"], async (req, res) => {
       });
     }
 
-    // Plain text alternative (critical for passing spam filters)
     const plainText = `
 GARGI ENGINEERING SERVICES - CONTACT ENQUIRY
 --------------------------------------------
@@ -394,7 +386,6 @@ Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLoc
       `,
     };
 
-    // Send email via SMTP
     const transporter = getTransporter();
     const info = await transporter.sendMail(mailOptions);
     console.log(
@@ -413,9 +404,7 @@ Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLoc
     });
   }
 });
-// ════════════════════════════════════════════════════════════════
-// 3. ROUTE: BROCHURE DOWNLOAD ENQUIRY (/api/brochure)
-// ════════════════════════════════════════════════════════════════
+
 app.post(["/api/brochure", "/brochure"], async (req, res) => {
   try {
     const { fullName, email, phone, company, designation, serviceInterest } =
@@ -505,7 +494,6 @@ Downloaded via Gargi Engineering Portal on ${new Date().toLocaleString()}
   }
 });
 
-// Start local listener only when not running on Vercel Serverless
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(
