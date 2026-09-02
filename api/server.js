@@ -18,23 +18,27 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// SMTP Configuration with Connection Pooling for Ultra-Fast Instant Sending
+// SMTP Configuration using Gmail Service
 const transporter = nodemailer.createTransport({
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 100,
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "465", 10),
-  secure: process.env.SMTP_SECURE !== "false", // SSL
+  service: "gmail",
   auth: {
-    user: process.env.SMTP_USER || 'infogargiengineering@gmail.com',
-    pass: (process.env.SMTP_APP_PASSWORD || process.env.SMTP_PASS || 'ypti yshc dwuw ftxx').replace(/\s+/g, ''),
+    user: process.env.SMTP_USER || "pgdiginitin78@gmail.com",
+    pass: (
+      process.env.SMTP_APP_PASSWORD ||
+      process.env.SMTP_PASS ||
+      ""
+    ).replace(/\s+/g, ""),
   },
 });
 
-// Destination email to receive all website inquiries
+// Destination email to receive all website inquiries (reads dynamically from .env on every request)
 const getReceiverEmail = () => {
-  return process.env.RECEIVER_EMAIL || process.env.SMTP_USER || 'infogargiengineering@gmail.com';
+  dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true });
+  return (
+    process.env.RECEIVER_EMAIL ||
+      process.env.SMTP_USER ||
+      "pebgargiengineering@gmail.com"
+  );
 };
 
 // Verify SMTP connection on startup
@@ -49,12 +53,10 @@ transporter.verify((error, success) => {
 });
 
 app.get("/api/health", (req, res) => {
-  res
-    .status(200)
-    .json({
-      status: "ok",
-      message: "Gargi Industry Email API is running smoothly.",
-    });
+  res.status(200).json({
+    status: "ok",
+    message: "Gargi Industry Email API is running smoothly.",
+  });
 });
 
 app.post("/api/consultation", async (req, res) => {
@@ -94,7 +96,7 @@ ${message ? message : "No additional description provided."}
 Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocaleString()}
     `.trim();
 
-    const senderEmail = process.env.SMTP_USER || "infogargiengineering@gmail.com";
+    const senderEmail = process.env.SMTP_USER || "pgdiginitin78@gmail.com";
 
     const mailOptions = {
       from: `"Consultation Enquiry - ${fullName}" <${senderEmail}>`,
@@ -185,29 +187,21 @@ Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocal
       `,
     };
 
-    // Send email immediately via warm SMTP pool
-    transporter
-      .sendMail(mailOptions)
-      .then(() => {
-        console.log(
-          `✅ Consultation email for "${fullName}" sent to ${getReceiverEmail()}`,
-        );
-      })
-      .catch((err) => {
-        console.error("❌ Error sending consultation email:", err);
-      });
+    // Send email via SMTP
+    const info = await transporter.sendMail(mailOptions);
+    console.log(
+      `✅ Consultation email for "${fullName}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
+    );
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Consultation request sent successfully!",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Consultation request sent successfully!",
+    });
   } catch (error) {
-    console.error("Error processing consultation request:", error);
+    console.error("❌ Error sending consultation email:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to process consultation request.",
+      message: error.message || "Failed to process consultation request.",
     });
   }
 });
@@ -243,7 +237,7 @@ ${message}
 Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLocaleString()}
     `.trim();
 
-    const senderEmail = process.env.SMTP_USER || "infogargiengineering@gmail.com";
+    const senderEmail = process.env.SMTP_USER || "pgdiginitin78@gmail.com";
 
     const mailOptions = {
       from: `"Contact Enquiry - ${name}" <${senderEmail}>`,
@@ -327,29 +321,111 @@ Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLoc
       `,
     };
 
-    // Send email immediately via warm SMTP pool
-    transporter
-      .sendMail(mailOptions)
-      .then(() => {
-        console.log(
-          `✅ Contact inquiry for "${name}" sent to ${getReceiverEmail()}`,
-        );
-      })
-      .catch((err) => {
-        console.error("❌ Error sending contact email:", err);
-      });
+    // Send email via SMTP
+    const info = await transporter.sendMail(mailOptions);
+    console.log(
+      `✅ Contact inquiry for "${name}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
+    );
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Your message has been sent successfully!",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Your message has been sent successfully!",
+    });
   } catch (error) {
-    console.error("Error processing contact email:", error);
+    console.error("❌ Error sending contact email:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to process contact message.",
+      message: error.message || "Failed to process contact message.",
+    });
+  }
+});
+// ════════════════════════════════════════════════════════════════
+// 3. ROUTE: BROCHURE DOWNLOAD ENQUIRY (/api/brochure)
+// ════════════════════════════════════════════════════════════════
+app.post("/api/brochure", async (req, res) => {
+  try {
+    const { fullName, email, phone, company, designation, serviceInterest } =
+      req.body;
+
+    if (!fullName || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill in your name and email.",
+      });
+    }
+
+    const plainText = `
+GARGI ENGINEERING SERVICES - BROCHURE DOWNLOAD LEAD
+----------------------------------------------------
+Full Name: ${fullName}
+Email: ${email}
+Phone: ${phone || "Not provided"}
+Company: ${company || "Not provided"}
+Designation: ${designation || "Not provided"}
+Service of Interest: ${serviceInterest || "PEB Design & Engineering"}
+----------------------------------------------------
+Downloaded via Gargi Engineering Portal on ${new Date().toLocaleString()}
+    `.trim();
+
+    const senderEmail = process.env.SMTP_USER || "pgdiginitin78@gmail.com";
+
+    const mailOptions = {
+      from: `"Brochure Lead - ${fullName}" <${senderEmail}>`,
+      replyTo: email,
+      to: getReceiverEmail(),
+      subject: `Brochure Download Lead: ${fullName} (${company || "Website Visitor"})`,
+      text: plainText,
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; }
+            .card { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+            .header { background: #0b1e38; padding: 20px; text-align: center; color: #ffffff; }
+            .body { padding: 24px; font-size: 14px; color: #334155; }
+            .table { width: 100%; border-collapse: collapse; }
+            .table td { padding: 8px; border-bottom: 1px solid #f1f5f9; }
+            .label { font-weight: 600; color: #64748b; width: 40%; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="header">
+              <h2 style="margin:0; color:#ffffff;">Brochure Download Request</h2>
+              <p style="margin:4px 0 0; color:#cbd5e1; font-size:13px;">New lead from website</p>
+            </div>
+            <div class="body">
+              <table class="table">
+                <tr><td class="label">Full Name:</td><td><strong>${fullName}</strong></td></tr>
+                <tr><td class="label">Email:</td><td><a href="mailto:${email}">${email}</a></td></tr>
+                <tr><td class="label">Phone:</td><td>${phone || "<em>Not provided</em>"}</td></tr>
+                <tr><td class="label">Company:</td><td>${company || "<em>Not provided</em>"}</td></tr>
+                <tr><td class="label">Designation:</td><td>${designation || "<em>Not provided</em>"}</td></tr>
+                <tr><td class="label">Service Interest:</td><td>${serviceInterest || "PEB Design & Engineering"}</td></tr>
+              </table>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(
+      `✅ Brochure lead for "${fullName}" sent to ${getReceiverEmail()} (ID: ${info.messageId})`,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Brochure lead recorded successfully!",
+    });
+  } catch (error) {
+    console.error("❌ Error sending brochure lead email:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to process brochure request.",
     });
   }
 });
