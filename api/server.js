@@ -44,7 +44,6 @@ const getSmtpCredentials = () => {
     process.env.APP_PASSWORD ||
     "";
 
-  // Strip quotes (single/double) and any internal spaces (Google App Passwords have 4-character spaces like 'abcd efgh ijkl mnop')
   const pass = rawPass.replace(/['"\s]/g, "");
 
   const passEnvSource = process.env.SMTP_APP_PASSWORD
