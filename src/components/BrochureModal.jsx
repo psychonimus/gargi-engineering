@@ -89,20 +89,12 @@ const BrochureModal = ({ isOpen, onClose }) => {
 
     setIsSubmitting(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      try {
-        await fetch(`${apiUrl}/api/brochure`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-      } catch (err) {
-        await fetch('/api/brochure', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-      }
+      const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+      await fetch(`${apiUrl}/api/brochure`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
     } catch (err) {
       console.warn('Brochure notification skipped:', err);
     } finally {

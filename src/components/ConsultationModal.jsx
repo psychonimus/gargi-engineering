@@ -105,25 +105,14 @@ export default function ConsultationModal({ isOpen, onClose }) {
 
     setIsSubmitting(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      let response;
-      try {
-        response = await fetch(`${apiUrl}/api/consultation`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      } catch (networkErr) {
-        response = await fetch('/api/consultation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      }
+      const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+      const response = await fetch(`${apiUrl}/api/consultation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
       let data = {};
       try {
@@ -140,7 +129,7 @@ export default function ConsultationModal({ isOpen, onClose }) {
       }
     } catch (err) {
       console.error('Consultation request failed:', err);
-      setServerError('Unable to connect to the email server. Please make sure "npm run dev" or "npm run server" is running.');
+      setServerError('Unable to connect to the email server. Please check your internet connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

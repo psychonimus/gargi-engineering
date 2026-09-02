@@ -5,11 +5,15 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Load .env file from root directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
-dotenv.config(); // fallback
+// Load .env file safely (local development fallback)
+try {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  dotenv.config({ path: path.resolve(__dirname, "../.env") });
+  dotenv.config();
+} catch (e) {
+  dotenv.config();
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// SMTP Configuration using Gmail Service
+// SMTP Configuration using Gmail Service with timeout protection
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -29,37 +33,41 @@ const transporter = nodemailer.createTransport({
       ""
     ).replace(/\s+/g, ""),
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
 });
 
-// Destination email to receive all website inquiries (reads dynamically from .env on every request)
+// Destination email to receive all website inquiries
 const getReceiverEmail = () => {
-  dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true });
   return (
     process.env.RECEIVER_EMAIL ||
-      process.env.SMTP_USER ||
-      "pebgargiengineering@gmail.com"
+    process.env.SMTP_USER ||
+    "pebgargiengineering@gmail.com"
   );
 };
 
-// Verify SMTP connection on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP Connection Error:", error.message);
-  } else {
-    console.log(
-      "✅ SMTP Transporter connected successfully and ready to send emails.",
-    );
-  }
-});
+// Verify SMTP connection on local startup
+if (!process.env.VERCEL) {
+  transporter.verify((error) => {
+    if (error) {
+      console.error("❌ SMTP Connection Error:", error.message);
+    } else {
+      console.log(
+        "✅ SMTP Transporter connected successfully and ready to send emails.",
+      );
+    }
+  });
+}
 
-app.get("/api/health", (req, res) => {
+app.get(["/api/health", "/health", "/api", "/"], (req, res) => {
   res.status(200).json({
     status: "ok",
     message: "Gargi Industry Email API is running smoothly.",
   });
 });
 
-app.post("/api/consultation", async (req, res) => {
+app.post(["/api/consultation", "/consultation"], async (req, res) => {
   try {
     const {
       fullName,
@@ -209,7 +217,7 @@ Received via Gargi Engineering Portal (www.gargipeb.com) on ${new Date().toLocal
 // ════════════════════════════════════════════════════════════════
 // 2. ROUTE: CONTACT PAGE FORM (/api/contact)
 // ════════════════════════════════════════════════════════════════
-app.post("/api/contact", async (req, res) => {
+app.post(["/api/contact", "/contact"], async (req, res) => {
   try {
     const { name, email, phone, company, service, message } = req.body;
 
@@ -342,7 +350,7 @@ Sent via Gargi Engineering Contact Page (www.gargipeb.com) on ${new Date().toLoc
 // ════════════════════════════════════════════════════════════════
 // 3. ROUTE: BROCHURE DOWNLOAD ENQUIRY (/api/brochure)
 // ════════════════════════════════════════════════════════════════
-app.post("/api/brochure", async (req, res) => {
+app.post(["/api/brochure", "/brochure"], async (req, res) => {
   try {
     const { fullName, email, phone, company, designation, serviceInterest } =
       req.body;
@@ -430,8 +438,13 @@ Downloaded via Gargi Engineering Portal on ${new Date().toLocaleString()}
   }
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `🚀 Gargi Industry SMTP Server is running on http://localhost:${PORT}`,
-  );
-});
+// Start local listener only when not running on Vercel Serverless
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(
+      `🚀 Gargi Industry SMTP Server is running on http://localhost:${PORT}`,
+    );
+  });
+}
+
+export default app;

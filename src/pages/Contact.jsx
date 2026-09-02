@@ -42,25 +42,14 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      let response;
-      try {
-        response = await fetch(`${apiUrl}/api/contact`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      } catch (networkErr) {
-        response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-      }
+      const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+      const response = await fetch(`${apiUrl}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
       let data = {};
       try {
@@ -81,11 +70,11 @@ export default function Contact() {
           message: ''
         });
       } else {
-        setServerError(data.message || 'Failed to send message. Please ensure the email server is running.');
+        setServerError(data.message || 'Failed to send message. Please try again.');
       }
     } catch (err) {
       console.error('Contact submission error:', err);
-      setServerError('Unable to connect to the email server. Please make sure "npm run dev" or "npm run server" is running.');
+      setServerError('Unable to connect to the email server. Please check your internet connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
