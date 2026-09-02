@@ -2014,9 +2014,10 @@
   }
 
   .testi-card_avater img {
-    width: 100% !important;
-    height: 100% !important;
+    width: 70% !important;
+    height: 70% !important;
     object-fit: cover !important;
+    
   }
 
   .testi-card .media-left .testi-card_quote {
@@ -2242,9 +2243,9 @@
 }
 
 .testi-card_avater img {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 50% !important;
+  width: 70% !important;
+  height: 70% !important;
+  /* border-radius: 50% !important; */
   object-fit: cover !important;
   display: block !important;
 }
