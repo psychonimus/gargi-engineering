@@ -22,18 +22,57 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Helper to create transporter on demand with environment validation
-const getTransporter = () => {
-  const user = process.env.SMTP_USER || "pgdiginitin78@gmail.com";
-  const pass = (
+// Helper to get SMTP credentials with multiple fallback variable names
+const getSmtpCredentials = () => {
+  const user = (
+    process.env.SMTP_USER ||
+    process.env.EMAIL_USER ||
+    process.env.GMAIL_USER ||
+    process.env.SMTP_EMAIL ||
+    "pgdiginitin78@gmail.com"
+  ).trim();
+
+  // Check all possible environment variable names the user might have configured
+  const rawPass =
     process.env.SMTP_APP_PASSWORD ||
     process.env.SMTP_PASS ||
-    ""
-  ).replace(/\s+/g, "");
+    process.env.SMTP_PASSWORD ||
+    process.env.GMAIL_APP_PASSWORD ||
+    process.env.EMAIL_APP_PASSWORD ||
+    process.env.EMAIL_PASS ||
+    process.env.EMAIL_PASSWORD ||
+    process.env.APP_PASSWORD ||
+    "";
+
+  // Strip quotes (single/double) and any internal spaces (Google App Passwords have 4-character spaces like 'abcd efgh ijkl mnop')
+  const pass = rawPass.replace(/['"\s]/g, "");
+
+  const passEnvSource = process.env.SMTP_APP_PASSWORD
+    ? "SMTP_APP_PASSWORD"
+    : process.env.SMTP_PASS
+      ? "SMTP_PASS"
+      : process.env.SMTP_PASSWORD
+        ? "SMTP_PASSWORD"
+        : process.env.GMAIL_APP_PASSWORD
+          ? "GMAIL_APP_PASSWORD"
+          : process.env.EMAIL_PASS
+            ? "EMAIL_PASS"
+            : process.env.EMAIL_PASSWORD
+              ? "EMAIL_PASSWORD"
+              : process.env.APP_PASSWORD
+                ? "APP_PASSWORD"
+                : "none";
+
+  return { user, pass, passEnvSource };
+};
+
+// Helper to create transporter on demand with environment validation
+const getTransporter = () => {
+  const { user, pass, passEnvSource } = getSmtpCredentials();
 
   if (!user || !pass) {
     throw new Error(
-      "SMTP credentials not configured. Please add SMTP_USER and SMTP_APP_PASSWORD in your Vercel Dashboard under Settings -> Environment Variables."
+      `SMTP credentials not configured. Please add SMTP_USER and SMTP_APP_PASSWORD in your Vercel Dashboard under Settings -> Environment Variables. (Detected: user=${user ? "OK" : "MISSING"}, pass=${pass ? "OK" : "MISSING"}, source=${passEnvSource})`
     );
   }
 
@@ -53,9 +92,10 @@ const getTransporter = () => {
 const getReceiverEmail = () => {
   return (
     process.env.RECEIVER_EMAIL ||
+    process.env.DESTINATION_EMAIL ||
     process.env.SMTP_USER ||
     "pebgargiengineering@gmail.com"
-  );
+  ).trim();
 };
 
 // Verify SMTP connection on local startup if password is provided
@@ -77,9 +117,18 @@ if (!process.env.VERCEL) {
 }
 
 app.get(["/api/health", "/health", "/api", "/"], (req, res) => {
+  const { user, pass, passEnvSource } = getSmtpCredentials();
   res.status(200).json({
     status: "ok",
     message: "Gargi Industry Email API is running smoothly.",
+    smtp_diagnostic: {
+      user_configured: Boolean(user),
+      user_email: user ? `${user.substring(0, 3)}***@${user.split("@")[1] || "gmail.com"}` : "not set",
+      password_configured: Boolean(pass && pass.length > 0),
+      password_length: pass ? pass.length : 0,
+      detected_from_env_key: passEnvSource,
+      receiver_email: getReceiverEmail(),
+    },
   });
 });
 
